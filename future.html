@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Challenge - Future Simple</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-red: #C20000;
+            --brand-black: #000000;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--brand-black);
+            color: #ffffff;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .dynamic-container {
+            position: relative;
+            width: 95%;
+            max-width: 550px;
+            padding: 2px;
+            border-radius: 24px;
+            background: linear-gradient(145deg, #1a0000, #000000);
+            overflow: hidden;
+        }
+
+        .dynamic-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                transparent, 
+                var(--brand-red), 
+                transparent 30%
+            );
+            animation: rotateBorder 4s linear infinite;
+            z-index: 0;
+        }
+
+        .inner-content {
+            position: relative;
+            background: var(--brand-black);
+            border-radius: 22px;
+            z-index: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            min-height: 480px;
+            justify-content: center;
+        }
+
+        @keyframes rotateBorder {
+            100% { transform: rotate(360deg); }
+        }
+
+        .glow-pulse {
+            box-shadow: 0 0 15px rgba(194, 0, 0, 0.2);
+            animation: pulseGlow 3s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 10px rgba(194, 0, 0, 0.1); }
+            to { box-shadow: 0 0 25px rgba(194, 0, 0, 0.4); }
+        }
+
+        .drop-target {
+            display: inline-flex;
+            width: 145px;
+            height: 38px;
+            border-bottom: 2px solid var(--brand-red);
+            vertical-align: middle;
+            justify-content: center;
+            align-items: center;
+            margin: 0 8px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--brand-red);
+        }
+
+        .drop-target.filled {
+            border-bottom-color: transparent;
+            background: rgba(194, 0, 0, 0.15);
+            border-radius: 8px;
+            color: white;
+        }
+
+        .word-option {
+            background: #0f0f0f;
+            border: 1px solid #222;
+            padding: 10px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.82rem;
+            min-width: 110px;
+            text-align: center;
+        }
+
+        .word-option:hover {
+            border-color: var(--brand-red);
+            background: #1a0000;
+        }
+
+        .word-option.selected {
+            background: var(--brand-red);
+            border-color: var(--brand-red);
+            box-shadow: 0 0 15px rgba(194, 0, 0, 0.4);
+        }
+
+        .progress-bar {
+            height: 3px;
+            background: #111;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 22px 22px 0 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--brand-red);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .btn-primary {
+            background: var(--brand-red);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .animate-pop {
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dynamic-container glow-pulse">
+    <div class="inner-content">
+        <div class="progress-bar">
+            <div id="progressBar" class="progress-fill"></div>
+        </div>
+
+        <!-- Intro -->
+        <div id="screen-intro" class="flex flex-col items-center text-center py-4">
+            <div class="mb-4 text-[#C20000]">
+                <i data-lucide="zap" size="40" stroke-width="3"></i>
+            </div>
+            <h1 class="text-2xl font-bold mb-2">Future simple<br><span class="text-[#C20000]">Story Challenge</span></h1>
+            <p class="text-gray-400 text-xs mb-8 max-w-[280px]">O que o futuro reserva para o Alex? Pratique as formas de futuro em inglês.</p>
+            <button onclick="changeScreen('game')" class="btn-primary">
+                Começar desafio <i data-lucide="play" size="16"></i>
+            </button>
+        </div>
+
+        <!-- Game -->
+        <div id="screen-game" class="hidden flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <span class="text-[9px] font-bold tracking-widest text-gray-500 uppercase">Contexto: Aspirações</span>
+                <span id="questionNum" class="text-[9px] font-bold text-[#C20000]">01 / 06</span>
+            </div>
+
+            <div id="gameContent" class="animate-pop">
+                <div id="sentenceDisplay" class="text-lg font-light leading-relaxed mb-8 text-gray-200 text-center min-h-[100px] flex items-center justify-center flex-wrap px-2">
+                    <!-- Frase injetada -->
+                </div>
+
+                <div class="text-center mb-4">
+                    <span class="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Selecione a opção correta</span>
+                </div>
+                <div class="grid grid-cols-2 gap-3 justify-items-center" id="optionsGrid">
+                    <!-- Opções injetadas -->
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-center h-10">
+                <button id="nextBtn" onclick="handleNext()" class="btn-primary opacity-0 pointer-events-none">
+                    Próximo <i data-lucide="chevron-right" size="16"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- End -->
+        <div id="screen-end" class="hidden flex flex-col items-center text-center py-4">
+            <div class="mb-4 text-[#C20000] animate-bounce">
+                <i data-lucide="trophy" size="48"></i>
+            </div>
+            <h2 class="text-xl font-bold mb-2">Futuro planejado!</h2>
+            <p id="scoreText" class="text-gray-400 text-xs mb-8 italic"></p>
+            <button onclick="resetGame()" class="btn-primary">
+                Refazer desafio <i data-lucide="rotate-ccw" size="16"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        { 
+            q: "Next year, Alex ________ a new course in digital marketing.", 
+            a: "is going to start", 
+            options: ["starts", "is going to start", "will starting", "started"] 
+        },
+        { 
+            q: "He believes he ________ a manager in his company soon.", 
+            a: "will become", 
+            options: ["will become", "is become", "becoming", "will became"] 
+        },
+        { 
+            q: "Alex ________ more often once he gets his promotion.", 
+            a: "will travel", 
+            options: ["travels", "travelled", "will travel", "is travel"] 
+        },
+        { 
+            q: "He ________ a new house until he saves enough money.", 
+            a: "won't buy", 
+            options: ["won't buy", "not will buy", "don't buy", "won't bought"] 
+        },
+        { 
+            q: "We ________ a big party to celebrate his success.", 
+            a: "are going to have", 
+            options: ["have", "will having", "are going to have", "has"] 
+        },
+        { 
+            q: "I think he ________ very successful in the future.", 
+            a: "will be", 
+            options: ["is being", "will be", "will is", "be"] 
+        }
+    ];
+
+    let currentIdx = 0;
+    let score = 0;
+    let selectedThisTurn = null;
+
+    function changeScreen(screen) {
+        document.getElementById('screen-intro').classList.add('hidden');
+        document.getElementById('screen-game').classList.add('hidden');
+        document.getElementById('screen-end').classList.add('hidden');
+        document.getElementById(`screen-${screen}`).classList.remove('hidden');
+        if(screen === 'game') loadQuestion();
+    }
+
+    function loadQuestion() {
+        selectedThisTurn = null;
+        const q = questions[currentIdx];
+        
+        document.getElementById('progressBar').style.width = `${((currentIdx + 1) / questions.length) * 100}%`;
+        document.getElementById('questionNum').innerText = `0${currentIdx + 1} / 0${questions.length}`;
+
+        const parts = q.q.split('________');
+        document.getElementById('sentenceDisplay').innerHTML = `
+            ${parts[0]} <span id="dropZone" class="drop-target">...</span> ${parts[1]}
+        `;
+
+        const grid = document.getElementById('optionsGrid');
+        grid.innerHTML = '';
+        
+        const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+        
+        shuffledOptions.forEach(opt => {
+            const div = document.createElement('div');
+            div.className = 'word-option';
+            div.innerText = opt;
+            div.onclick = () => selectWord(opt, div);
+            grid.appendChild(div);
+        });
+
+        document.getElementById('nextBtn').classList.add('opacity-0', 'pointer-events-none');
+        lucide.createIcons();
+    }
+
+    function selectWord(word, element) {
+        selectedThisTurn = word;
+        document.querySelectorAll('.word-option').forEach(el => el.classList.remove('selected'));
+        element.classList.add('selected');
+        
+        const zone = document.getElementById('dropZone');
+        zone.innerText = word;
+        zone.classList.add('filled');
+        document.getElementById('nextBtn').classList.remove('opacity-0', 'pointer-events-none');
+    }
+
+    function handleNext() {
+        if (selectedThisTurn === questions[currentIdx].a) score++;
+
+        if (currentIdx < questions.length - 1) {
+            currentIdx++;
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        changeScreen('end');
+        const txt = document.getElementById('scoreText');
+        txt.innerHTML = `Acertou <span class="text-white font-bold">${score}/${questions.length}</span> sobre os sonhos do Alex.<br>Você está pronto para o futuro!`;
+    }
+
+    function resetGame() {
+        currentIdx = 0;
+        score = 0;
+        changeScreen('intro');
+    }
+
+    lucide.createIcons();
+</script>
+
+</body>
+</html>
