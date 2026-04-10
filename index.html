@@ -1,80 +1,676 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alex's Journey - English Challenge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Alex's Journey: Master English Tenses</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --brand-red: #C20000;
-            --brand-black: #0f0f0f;
+            --brand-black: #000000;
+            --brand-dark-bg: #0a0a0a;
         }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #000000;
+            background-color: var(--brand-black);
             color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-        .card-journey {
+
+        /* Less rounded - sharper container */
+        .journey-app {
+            width: 100%;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .dynamic-container {
+            position: relative;
+            width: 100%;
+            padding: 2px;
+            border-radius: 16px;
+            background: linear-gradient(145deg, #1a0000, #000000);
+            overflow: hidden;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.8);
+        }
+
+        .dynamic-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                transparent, 
+                var(--brand-red), 
+                transparent 30%
+            );
+            animation: rotateBorder 4s linear infinite;
+            z-index: 0;
+        }
+
+        .inner-content {
+            position: relative;
+            background: var(--brand-black);
+            border-radius: 14px;
+            z-index: 1;
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            min-height: 540px;
+            transition: all 0.2s ease;
+        }
+
+        @keyframes rotateBorder {
+            100% { transform: rotate(360deg); }
+        }
+
+        .glow-pulse {
+            box-shadow: 0 0 15px rgba(194, 0, 0, 0.2);
+            animation: pulseGlow 3s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 10px rgba(194, 0, 0, 0.1); }
+            to { box-shadow: 0 0 25px rgba(194, 0, 0, 0.5); }
+        }
+
+        /* Sharper menu - less rounded */
+        .tense-menu {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .menu-btn {
+            background: #0f0f0f;
+            border: 1px solid #2a2a2a;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #ccc;
+        }
+
+        .menu-btn i, .menu-btn svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .menu-btn:hover i, .menu-btn:hover svg {
+            transform: scale(1.1);
+        }
+
+        .menu-btn.active {
+            background: var(--brand-red);
+            border-color: var(--brand-red);
+            color: white;
+            box-shadow: 0 0 12px rgba(194,0,0,0.5);
+        }
+
+        .menu-btn:hover:not(.active) {
+            border-color: var(--brand-red);
+            background: #1a0505;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Game elements - sharper corners */
+        .drop-target {
+            display: inline-flex;
+            width: 145px;
+            height: 42px;
+            border-bottom: 2px solid var(--brand-red);
+            vertical-align: middle;
+            justify-content: center;
+            align-items: center;
+            margin: 0 6px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--brand-red);
+            background: rgba(0,0,0,0.6);
+            border-radius: 6px;
+        }
+
+        .drop-target.filled {
+            border-bottom-color: transparent;
+            background: rgba(194, 0, 0, 0.2);
+            border-radius: 6px;
+            color: white;
+            border: 1px solid rgba(194,0,0,0.3);
+        }
+
+        .word-option {
             background: #0f0f0f;
             border: 1px solid #222;
-            transition: all 0.3s ease;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+            min-width: 110px;
+            text-align: center;
+            font-weight: 500;
         }
-        .card-journey:hover {
+
+        .word-option:hover {
             border-color: var(--brand-red);
-            transform: translateY(-5px);
+            background: #1a0000;
+            transform: translateY(-2px) scale(1.02);
         }
-        .btn-mars {
-            background-color: var(--brand-red);
+
+        .word-option.selected {
+            background: var(--brand-red);
+            border-color: var(--brand-red);
+            box-shadow: 0 0 15px rgba(194, 0, 0, 0.4);
+            color: white;
+            transform: scale(0.98);
+        }
+
+        .progress-bar {
+            height: 3px;
+            background: #1f1f1f;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 14px 14px 0 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--brand-red);
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .btn-primary {
+            background: var(--brand-red);
+            color: white;
+            padding: 10px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(194,0,0,0.4);
+        }
+
+        .animate-pop {
+            animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .feedback-toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e1e1e;
+            border-left: 4px solid var(--brand-red);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #eee;
+            z-index: 200;
+            pointer-events: none;
             transition: opacity 0.2s;
+            backdrop-filter: blur(8px);
         }
-        .btn-mars:hover {
-            opacity: 0.9;
+
+        .insight-badge {
+            background: rgba(194, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.7rem;
+            text-align: center;
+            color: #ffffff;
+            margin-top: 12px;
+            border: 0.5px solid rgba(194,0,0,0.3);
+            transition: all 0.2s ease;
+        }
+
+        .hover-scale {
+            transition: transform 0.2s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 500px) {
+            .inner-content {
+                padding: 1.2rem;
+            }
+            .word-option {
+                min-width: 90px;
+                font-size: 0.75rem;
+                padding: 8px 10px;
+            }
+            .drop-target {
+                width: 120px;
+            }
+        }
+
+        /* Tailwind interactive overrides */
+        .transition-all {
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-6">
-
-    <div class="text-center mb-12">
-        <h1 class="text-4xl font-extrabold mb-2">Alex's <span class="text-[#C20000]">Journey</span></h1>
-        <p class="text-gray-400">Escolha um tempo verbal para praticar a história.</p>
+<body>
+<div class="journey-app">
+    <!-- MENU with lucide icons (no emojis) -->
+    <div class="tense-menu">
+        <button id="menuPresent" class="menu-btn active" data-tense="present">
+            <i data-lucide="sun" size="16"></i> Present
+        </button>
+        <button id="menuPast" class="menu-btn" data-tense="past">
+            <i data-lucide="clock" size="16"></i> Past
+        </button>
+        <button id="menuFuture" class="menu-btn" data-tense="future">
+            <i data-lucide="sparkles" size="16"></i> Future
+        </button>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl w-full">
-        
-        <div class="card-journey p-8 rounded-2xl text-center">
-            <div class="text-[#C20000] mb-4 flex justify-center">
-                <i data-lucide="clock" size="40"></i>
+    <div class="dynamic-container glow-pulse">
+        <div class="inner-content">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
             </div>
-            <h2 class="text-xl font-bold mb-2">Present Simple</h2>
-            <p class="text-gray-500 text-sm mb-6">A rotina diária e hábitos do Alex.</p>
-            <a href="present.html" class="btn-mars px-6 py-2 rounded-lg font-semibold inline-block">Jogar</a>
-        </div>
 
-        <div class="card-journey p-8 rounded-2xl text-center">
-            <div class="text-[#C20000] mb-4 flex justify-center">
-                <i data-lucide="history" size="40"></i>
+            <!-- INTRO SCREEN (fully lucide, no emojis) -->
+            <div id="screen-intro" class="flex flex-col items-center text-center py-4">
+                <div class="mb-4 text-[#C20000] transition-transform hover:scale-110 duration-200">
+                    <i data-lucide="compass" size="48" stroke-width="2"></i>
+                </div>
+                <h1 id="introTitle" class="text-2xl font-bold mb-2">Present Simple<br><span class="text-[#C20000]">Story Challenge</span></h1>
+                <p id="introDesc" class="text-gray-400 text-xs mb-6 max-w-[280px]">Complete a rotina diária do Alex escolhendo a forma verbal correta.</p>
+                <button id="startGameBtn" class="btn-primary group transition-all duration-200 hover:translate-y-[-2px]">
+                    <i data-lucide="play" size="16"></i> Começar desafio
+                </button>
+                <div class="insight-badge mt-4 flex items-center justify-center gap-2">
+                    <i data-lucide="lightbulb" size="14" class="text-[#C20000]"></i>
+                    <span id="grammarTip">Present Simple: rotinas, fatos e verdades gerais.</span>
+                </div>
             </div>
-            <h2 class="text-xl font-bold mb-2">Past Simple</h2>
-            <p class="text-gray-500 text-sm mb-6">As origens e conquistas do passado.</p>
-            <a href="past.html" class="btn-mars px-6 py-2 rounded-lg font-semibold inline-block">Jogar</a>
-        </div>
 
-        <div class="card-journey p-8 rounded-2xl text-center">
-            <div class="text-[#C20000] mb-4 flex justify-center">
-                <i data-lucide="rocket" size="40"></i>
+            <!-- GAME SCREEN -->
+            <div id="screen-game" class="hidden flex flex-col">
+                <div class="flex justify-between items-center mb-5">
+                    <span id="tenseContext" class="text-[9px] font-bold tracking-widest text-gray-400 uppercase bg-black/30 px-2 py-1 rounded-md flex items-center gap-1">
+                        <i data-lucide="book-open" size="12"></i> Contexto: Rotina
+                    </span>
+                    <span id="questionNum" class="text-[9px] font-bold text-[#C20000] bg-black/40 px-3 py-1 rounded-md">01 / 06</span>
+                </div>
+
+                <div id="gameContent" class="animate-pop">
+                    <div id="sentenceDisplay" class="text-lg font-light leading-relaxed mb-7 text-gray-200 text-center min-h-[110px] flex items-center justify-center flex-wrap px-1">
+                        <!-- dynamic sentence -->
+                    </div>
+
+                    <div class="text-center mb-3 flex justify-center items-center gap-2">
+                        <i data-lucide="search" size="12" class="text-gray-500"></i>
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Selecione a opção correta</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 justify-items-center" id="optionsGrid">
+                        <!-- options injected -->
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-center h-12">
+                    <button id="nextBtn" onclick="handleNext()" class="btn-primary opacity-0 pointer-events-none transition-all duration-200">
+                        Próximo <i data-lucide="chevron-right" size="16"></i>
+                    </button>
+                </div>
+                <div class="insight-badge mt-3 flex items-center justify-center gap-2" id="liveInsight">
+                    <i data-lucide="brain" size="14" class="text-[#C20000]"></i>
+                    <span>Dica: Pense no contexto temporal da frase.</span>
+                </div>
             </div>
-            <h2 class="text-xl font-bold mb-2">Future Simple</h2>
-            <p class="text-gray-400 text-sm mb-6">Planos, sonhos e aspirações.</p>
-            <a href="future.html" class="btn-mars px-6 py-2 rounded-lg font-semibold inline-block">Jogar</a>
-        </div>
 
+            <!-- END SCREEN (lucide only) -->
+            <div id="screen-end" class="hidden flex flex-col items-center text-center py-4">
+                <div class="mb-4 text-[#C20000] transition-all duration-300 hover:scale-110 hover:rotate-3">
+                    <i data-lucide="trophy" size="52" stroke-width="1.8"></i>
+                </div>
+                <h2 class="text-xl font-bold mb-2 flex items-center gap-2 justify-center">
+                    <i data-lucide="flag-checkered" size="20" class="text-[#C20000]"></i>
+                    Missão cumprida!
+                </h2>
+                <p id="scoreText" class="text-gray-300 text-sm mb-4 italic"></p>
+                <p id="endReflection" class="text-xs text-gray-400 max-w-[260px] mb-6"></p>
+                <button id="resetFromEndBtn" class="btn-primary group">
+                    <i data-lucide="rotate-ccw" size="16"></i> Refazer desafio
+                </button>
+                <button id="changeTenseEndBtn" class="btn-primary bg-transparent border border-red-700 mt-3 hover:bg-red-900/30 group">
+                    <i data-lucide="layers" size="16"></i> Trocar tempo verbal
+                </button>
+            </div>
+        </div>
     </div>
+</div>
+<div id="toastMsg" class="feedback-toast hidden"></div>
 
-    <script>
+<script>
+    // ----- INTELLECTUAL CONTENT: Three story packs (Present, Past, Future) with deeper learning notes
+    const tenseData = {
+        present: {
+            name: "Present Simple",
+            contextLabel: "Rotina & Hábitos",
+            introTitle: "Present Simple<br><span class='text-[#C20000]'>Daily Routine</span>",
+            introDesc: "Alex shares his daily routine.",
+            grammarTip: "Present Simple: usado para rotinas, verdades universais e ações habituais. Verbos na 3ª pessoa (he/she/it) ganham -s/-es.",
+            finalMessage: "Excelente! Dominar o Present Simple é o alicerce da comunicação diária.",
+            questions: [
+                { q: "Every morning, Alex ________ up at 6:30 AM and stretches.", a: "wakes", options: ["wake", "wakes", "waking", "waked"] },
+                { q: "He always ________ a healthy breakfast before heading to the gym.", a: "eats", options: ["eat", "eats", "eating", "ate"] },
+                { q: "Alex ________ a car, so he takes the subway to work every day.", a: "doesn't have", options: ["don't have", "hasn't", "doesn't have", "not has"] },
+                { q: "At the office, he ________ emails and calls international clients.", a: "writes", options: ["write", "writes", "writing", "writed"] },
+                { q: "We ________ lunch together every Friday at the new bistro.", a: "have", options: ["has", "haves", "have", "having"] },
+                { q: "In the evening, he ________ documentary series to relax.", a: "watches", options: ["watch", "watchs", "watches", "watching"] }
+            ]
+        },
+        past: {
+            name: "Past Simple",
+            contextLabel: "Origens & Conquistas",
+            introTitle: "Past Simple<br><span class='text-[#C20000]'>How It Began</span>",
+            introDesc: "Find out how it all started for Alex.",
+            grammarTip: "Past Simple: ações concluídas no passado. Verbos regulares terminam em -ed, e os irregulares têm forma própria.",
+            finalMessage: "Ótimo! Contar histórias no passado exige prática — você está no caminho certo!",
+            questions: [
+                { q: "Before moving to the big city, Alex ________ in a small coastal town.", a: "lived", options: ["live", "lived", "living", "lives"] },
+                { q: "Three years ago, he ________ his university degree with honors.", a: "finished", options: ["finish", "finishing", "finished", "finishes"] },
+                { q: "He ________ incredibly hard to land his first job as an analyst.", a: "studied", options: ["study", "studied", "studying", "studies"] },
+                { q: "Alex ________ a second car last year because he preferred saving money.", a: "didn't buy", options: ["didn't buy", "not bought", "doesn't buy", "did not bought"] },
+                { q: "We ________ the same tiny office when we started our careers.", a: "shared", options: ["share", "sharing", "shares", "shared"] },
+                { q: "Last summer, he ________ to London for an innovative tech project.", a: "went", options: ["go", "goes", "went", "gone"] }
+            ]
+        },
+        future: {
+            name: "Future (will/going to)",
+            contextLabel: "Sonhos & Planos",
+            introTitle: "Future Simple<br><span class='text-[#C20000]'>Next Chapter</span>",
+            introDesc: "What will future bring for Alex? Practice 'will' and 'going to'.",
+            grammarTip: "Future: 'will' para previsões e decisões espontâneas; 'going to' para planos e intenções.",
+            finalMessage: "Incrível! Você já consegue falar sobre o futuro com confiança. Keep going!",
+            questions: [
+                { q: "Next semester, Alex ________ a specialization course in digital marketing.", a: "is going to start", options: ["starts", "is going to start", "will starting", "started"] },
+                { q: "He believes that one day he ________ a great leader in his field.", a: "will become", options: ["will become", "is become", "becoming", "will became"] },
+                { q: "Once he gets his promotion, Alex ________ abroad more frequently.", a: "will travel", options: ["travels", "travelled", "will travel", "is travel"] },
+                { q: "He ________ a new house until he saves enough money for a down payment.", a: "won't buy", options: ["won't buy", "not will buy", "don't buy", "won't bought"] },
+                { q: "We ________ a surprise celebration to honor his achievements.", a: "are going to have", options: ["have", "will having", "are going to have", "has"] },
+                { q: "I truly think Alex ________ extremely successful in the coming years.", a: "will be", options: ["is being", "will be", "will is", "be"] }
+            ]
+        }
+    };
+
+    let currentTense = 'present';
+    let currentIdx = 0;
+    let score = 0;
+    let selectedThisTurn = null;
+    let questionsArray = [];
+
+    // DOM elements
+    const screenIntro = document.getElementById('screen-intro');
+    const screenGame = document.getElementById('screen-game');
+    const screenEnd = document.getElementById('screen-end');
+    const progressFill = document.getElementById('progressBar');
+    const questionNumSpan = document.getElementById('questionNum');
+    const sentenceDisplay = document.getElementById('sentenceDisplay');
+    const optionsGrid = document.getElementById('optionsGrid');
+    const nextBtn = document.getElementById('nextBtn');
+    const tenseContextSpan = document.getElementById('tenseContext');
+    const introTitle = document.getElementById('introTitle');
+    const introDesc = document.getElementById('introDesc');
+    const grammarTipSpan = document.getElementById('grammarTip');
+    const liveInsightSpan = document.getElementById('liveInsight');
+    const startGameBtn = document.getElementById('startGameBtn');
+    const resetFromEndBtn = document.getElementById('resetFromEndBtn');
+    const changeTenseEndBtn = document.getElementById('changeTenseEndBtn');
+    const scoreTextSpan = document.getElementById('scoreText');
+    const endReflection = document.getElementById('endReflection');
+
+    const menuPresent = document.getElementById('menuPresent');
+    const menuPast = document.getElementById('menuPast');
+    const menuFuture = document.getElementById('menuFuture');
+
+    function showToast(msg, duration = 1800) {
+        const toast = document.getElementById('toastMsg');
+        toast.innerText = msg;
+        toast.classList.remove('hidden');
+        toast.classList.add('flex');
+        setTimeout(() => {
+            toast.classList.add('hidden');
+            toast.classList.remove('flex');
+        }, duration);
+    }
+
+    function loadTenseData(tense) {
+        const data = tenseData[tense];
+        if (!data) return;
+        questionsArray = data.questions;
+        currentIdx = 0;
+        score = 0;
+        selectedThisTurn = null;
+        introTitle.innerHTML = data.introTitle;
+        introDesc.innerText = data.introDesc;
+        grammarTipSpan.innerText = data.grammarTip;
+        if (tenseContextSpan) {
+            tenseContextSpan.innerHTML = `<i data-lucide="book-open" size="12"></i> Contexto: ${data.contextLabel}`;
+        }
+        if (liveInsightSpan) {
+            liveInsightSpan.innerHTML = `<i data-lucide="brain" size="14" class="text-[#C20000]"></i> <span>Dica gramatical: ${data.grammarTip.substring(0, 80)}...</span>`;
+        }
+        document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+        if (tense === 'present') menuPresent.classList.add('active');
+        if (tense === 'past') menuPast.classList.add('active');
+        if (tense === 'future') menuFuture.classList.add('active');
         lucide.createIcons();
-    </script>
+    }
+
+    function changeScreen(screen) {
+        screenIntro.classList.add('hidden');
+        screenGame.classList.add('hidden');
+        screenEnd.classList.add('hidden');
+        if (screen === 'intro') screenIntro.classList.remove('hidden');
+        if (screen === 'game') screenGame.classList.remove('hidden');
+        if (screen === 'end') screenEnd.classList.remove('hidden');
+        if (screen === 'game') {
+            loadQuestion();
+        }
+        lucide.createIcons();
+    }
+
+    function loadQuestion() {
+        if (!questionsArray.length) return;
+        const q = questionsArray[currentIdx];
+        selectedThisTurn = null;
+        const percent = ((currentIdx + 1) / questionsArray.length) * 100;
+        progressFill.style.width = `${percent}%`;
+        questionNumSpan.innerText = `${String(currentIdx + 1).padStart(2,'0')} / ${String(questionsArray.length).padStart(2,'0')}`;
+
+        const parts = q.q.split('________');
+        let sentenceHtml = '';
+        if (parts.length === 2) {
+            sentenceHtml = `${parts[0]} <span id="dropZone" class="drop-target">...</span> ${parts[1]}`;
+        } else {
+            sentenceHtml = `${q.q} <span id="dropZone" class="drop-target">...</span>`;
+        }
+        sentenceDisplay.innerHTML = sentenceHtml;
+
+        optionsGrid.innerHTML = '';
+        const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+        shuffled.forEach(opt => {
+            const div = document.createElement('div');
+            div.className = 'word-option transition-all duration-150 hover:shadow-md';
+            div.innerText = opt;
+            div.onclick = () => selectWord(opt, div);
+            optionsGrid.appendChild(div);
+        });
+
+        nextBtn.classList.add('opacity-0', 'pointer-events-none');
+        let extraInsight = "";
+        if (currentTense === 'present' && currentIdx === 2) extraInsight = "Atenção: 'doesn't have' é usado para negativas na 3ª pessoa.";
+        else if (currentTense === 'past' && currentIdx === 3) extraInsight = "'didn't buy' — verbo principal volta ao infinitivo após 'didn't'.";
+        else if (currentTense === 'future' && currentIdx === 0) extraInsight = "'is going to start' indica um plano definido para o futuro próximo.";
+        else extraInsight = "Tente analisar o sujeito e o tempo da ação.";
+        
+        if (liveInsightSpan) {
+            liveInsightSpan.innerHTML = `<i data-lucide="brain" size="14" class="text-[#C20000]"></i> <span>Insight: ${extraInsight}</span>`;
+        }
+        lucide.createIcons();
+    }
+
+    function selectWord(word, element) {
+        selectedThisTurn = word;
+        document.querySelectorAll('.word-option').forEach(el => el.classList.remove('selected'));
+        element.classList.add('selected');
+        const dropZone = document.getElementById('dropZone');
+        if (dropZone) {
+            dropZone.innerText = word;
+            dropZone.classList.add('filled');
+        }
+        nextBtn.classList.remove('opacity-0', 'pointer-events-none');
+    }
+
+    function handleNext() {
+        if (selectedThisTurn === null) {
+            showToast("Selecione uma palavra antes de continuar!", 1200);
+            return;
+        }
+        const currentQ = questionsArray[currentIdx];
+        const isCorrect = (selectedThisTurn === currentQ.a);
+        if (isCorrect) {
+            score++;
+            showToast("Correto! +1 ponto", 800);
+        } else {
+            showToast(`Ops! A resposta correta era "${currentQ.a}".`, 1300);
+        }
+
+        if (currentIdx < questionsArray.length - 1) {
+            currentIdx++;
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        const total = questionsArray.length;
+        const percentage = Math.round((score / total) * 100);
+        let reflectionMsg = "";
+        if (percentage === 100) reflectionMsg = "Perfeito! Você domina completamente este tempo verbal!";
+        else if (percentage >= 80) reflectionMsg = "Muito bem! Você tem um ótimo entendimento. Continue praticando!";
+        else if (percentage >= 60) reflectionMsg = "Bom trabalho! Reveja as dicas gramaticais para solidificar o conhecimento.";
+        else reflectionMsg = "Persistência é chave! Tente novamente e preste atenção nas terminações e auxiliares.";
+
+        const tenseName = tenseData[currentTense].name;
+        scoreTextSpan.innerHTML = `Você acertou <span class="text-white font-bold">${score}/${total}</span> (${percentage}%) na história do Alex (${tenseName}).`;
+        endReflection.innerHTML = `${reflectionMsg}<br>${tenseData[currentTense].finalMessage}`;
+        changeScreen('end');
+    }
+
+    function resetGameToIntro() {
+        currentIdx = 0;
+        score = 0;
+        selectedThisTurn = null;
+        changeScreen('intro');
+    }
+
+    function switchTenseAndReset(tense) {
+        currentTense = tense;
+        loadTenseData(currentTense);
+        resetGameToIntro();
+        questionsArray = tenseData[currentTense].questions;
+        currentIdx = 0;
+        score = 0;
+        selectedThisTurn = null;
+        changeScreen('intro');
+        showToast(`Mudou para ${tenseData[currentTense].name}! Novo desafio carregado.`, 1500);
+    }
+
+    startGameBtn.addEventListener('click', () => {
+        if (!questionsArray.length) loadTenseData(currentTense);
+        changeScreen('game');
+    });
+
+    resetFromEndBtn.addEventListener('click', () => {
+        resetGameToIntro();
+    });
+
+    changeTenseEndBtn.addEventListener('click', () => {
+        changeScreen('intro');
+    });
+
+    menuPresent.addEventListener('click', () => {
+        if (currentTense !== 'present') switchTenseAndReset('present');
+        else resetGameToIntro();
+    });
+    menuPast.addEventListener('click', () => {
+        if (currentTense !== 'past') switchTenseAndReset('past');
+        else resetGameToIntro();
+    });
+    menuFuture.addEventListener('click', () => {
+        if (currentTense !== 'future') switchTenseAndReset('future');
+        else resetGameToIntro();
+    });
+
+    loadTenseData('present');
+    questionsArray = tenseData.present.questions;
+    changeScreen('intro');
+    lucide.createIcons();
+
+    window.handleNext = handleNext;
+    window.resetGame = function() { resetGameToIntro(); };
+    window.changeScreen = changeScreen;
+
+    setInterval(() => {
+        if (document.querySelectorAll('[data-lucide]').length) lucide.createIcons();
+    }, 500);
+</script>
 </body>
 </html>
