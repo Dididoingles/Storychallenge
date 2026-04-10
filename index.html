@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex's Journey - English Challenge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-red: #C20000;
+            --brand-black: #0f0f0f;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .card-journey {
+            background: #0f0f0f;
+            border: 1px solid #222;
+            transition: all 0.3s ease;
+        }
+        .card-journey:hover {
+            border-color: var(--brand-red);
+            transform: translateY(-5px);
+        }
+        .btn-mars {
+            background-color: var(--brand-red);
+            transition: opacity 0.2s;
+        }
+        .btn-mars:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
+
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-extrabold mb-2">Alex's <span class="text-[#C20000]">Journey</span></h1>
+        <p class="text-gray-400">Escolha um tempo verbal para praticar a história.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl w-full">
+        
+        <div class="card-journey p-8 rounded-2xl text-center">
+            <div class="text-[#C20000] mb-4 flex justify-center">
+                <i data-lucide="clock" size="40"></i>
+            </div>
+            <h2 class="text-xl font-bold mb-2">Present Simple</h2>
+            <p class="text-gray-500 text-sm mb-6">A rotina diária e hábitos do Alex.</p>
+            <a href="present.html" class="btn-mars px-6 py-2 rounded-lg font-semibold inline-block">Jogar</a>
+        </div>
+
+        <div class="card-journey p-8 rounded-2xl text-center">
+            <div class="text-[#C20000] mb-4 flex justify-center">
+                <i data-lucide="history" size="40"></i>
+            </div>
+            <h2 class="text-xl font-bold mb-2">Past Simple</h2>
+            <p class="text-gray-500 text-sm mb-6">As origens e conquistas do passado.</p>
+            <a href="past.html" class="btn-mars px-6 py-2 rounded-lg font-semibold inline-block">Jogar</a>
+        </div>
+
+        <div class="card-journey p-8 rounded-2xl text-center">
+            <div class="text-[#C20000] mb-4 flex justify-center">
+                <i data-lucide="rocket" size="40"></i>
+            </div>
+            <h2 class="text-xl font-bold mb-2">Future Simple</h2>
+            <p class="text-gray-400 text-sm mb-6">Planos, sonhos e aspirações.</p>
+            <a href="future.html" class="btn-mars px-6 py-2 rounded-lg font-semibold inline-block">Jogar</a>
+        </div>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
